@@ -1,0 +1,240 @@
+Sub Data_Stock():
+
+        'This to run in every Worksheet
+        For Each ws In Worksheets
+        
+        
+Dim Ticker As String
+Dim Yearly_Change As Double
+Dim Percent_Change As Double
+Dim Total As Long
+Dim column As Integer
+Dim counter As Long
+Dim LastRow As Long
+Dim Open_SS As Double
+Dim Closee As Double
+Dim i As Long
+Dim j As Long
+Dim Greatest_Increase As Double
+Dim Greatest_ticker As String
+Dim Greatest_Decrease As Double
+Dim Greatest_Volume As Double
+
+
+column = 1
+counter = 2
+
+
+    'Ticker Type
+    
+     LastRow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+    For i = 2 To LastRow
+
+         If ws.Cells(i + 1, column).Value <> ws.Cells(i, column).Value Then
+
+    
+            ws.Cells(counter, 10).Value = ws.Cells(i, column).Value
+    
+            counter = counter + 1
+            
+            
+
+
+         End If
+    
+    Next i
+
+    'Yearly Change
+    
+    counter = 2
+     LastRow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+    For i = 1 To LastRow
+
+         If ws.Cells(i + 1, column).Value <> ws.Cells(i, column).Value Then
+
+            Open_S = ws.Cells(i + 1, 3).Value
+            
+            j = 0
+            
+                For j = i + j + 1 To LastRow
+               
+                     If ws.Cells(j + 1, column).Value <> ws.Cells(j, column).Value Then
+                
+                            Closee = ws.Cells(j, 6).Value
+                            
+                            Yearly_Change = Closee - Open_S
+                            
+                            ws.Cells(counter, 11).Value = Yearly_Change
+                        
+                           
+                        'This was made to avoid the overflow error or 0/0 and Percent Change
+                           
+                           If Open_S <> 0 Then
+                           
+                           
+                            Percent_Change = Yearly_Change / Open_S
+                            
+                            ws.Cells(counter, 12).Value = Format(Percent_Change, "Percent")
+                            
+                            counter = counter + 1
+                            
+                            Else
+                            
+                             ws.Cells(counter, 12).Value = Format(0, "Percent")
+                            
+                            counter = counter + 1
+                           
+                    End If
+                    
+                    Exit For
+                    
+                    End If
+                    
+                       
+                Next j
+
+         End If
+    
+    Next i
+  
+     
+'Total Stock Volume
+
+   LastRow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+   j = 2
+   Total_Stock_Volume = 0
+    For i = 2 To LastRow
+            
+         If ws.Cells(i, 1).Value = ws.Cells(j, 10).Value Then
+
+            
+            Stock_Volume = ws.Cells(i, 7).Value
+    
+            Total_Stock_Volume = Stock_Volume + Total_Stock_Volume
+            
+            Else
+            
+            ws.Cells(j, 13).Value = Total_Stock_Volume
+            j = j + 1
+            
+            Stock_Volume = 0
+            Total_Stock_Volume = 0
+            
+            Stock_Volume = ws.Cells(i, 7).Value
+    
+            Total_Stock_Volume = Stock_Volume + Total_Stock_Volume
+            
+            End If
+            
+            Next i
+             
+             
+'Challenges " Greatest Increase%
+
+
+ LastRow = ws.Cells(Rows.Count, 12).End(xlUp).Row
+    For i = 2 To LastRow
+    
+            If ws.Cells(i, 12).Value > ws.Cells(i + 1, 12).Value Then
+                         Greatest_Increase = ws.Cells(i, 12).Value
+                         Greatest_ticker = ws.Cells(i, 10).Value
+                         
+                                                                        
+                       
+                         For j = i + 1 To LastRow
+                        If Greatest_Increase > ws.Cells(j, 12).Value Then
+                        ws.Cells(2, 16).Value = Greatest_ticker
+                        
+                        ws.Cells(2, 17).Value = Format(Greatest_Increase, "Percent")
+                        
+                                If j = LastRow Then
+                                i = LastRow
+                                Exit For
+                                End If
+                            
+                            Else
+                            Exit For
+                       End If
+                            Next j
+           
+            End If
+            
+            
+            
+ Next i
+
+'Challenges " Greatest Decrease %
+
+
+ LastRow = ws.Cells(Rows.Count, 12).End(xlUp).Row
+    For i = 2 To LastRow
+    
+            If ws.Cells(i, 12).Value < ws.Cells(i + 1, 12).Value Then
+                         Greatest_Decrease = ws.Cells(i, 12).Value
+                         Greatest_ticker = ws.Cells(i, 10).Value
+                         
+                                                                        
+                       
+                         For j = i + 1 To LastRow
+                        If Greatest_Decrease < ws.Cells(j, 12).Value Then
+                        ws.Cells(3, 16).Value = Greatest_ticker
+                        
+                        ws.Cells(3, 17).Value = Format(Greatest_Decrease, "Percent")
+                        
+                                If j = LastRow Then
+                                i = LastRow
+                                Exit For
+                                End If
+                            
+                            Else
+                            Exit For
+                       End If
+                            Next j
+           
+            End If
+            
+            
+            
+ Next i
+ 
+ 
+ 'Challenges " Greatest Volume %"
+ 
+
+
+
+  LastRow = ws.Cells(Rows.Count, 13).End(xlUp).Row
+    For i = 2 To LastRow
+    
+            If ws.Cells(i, 13).Value > ws.Cells(i + 1, 13).Value Then
+                         Greatest_Volume = ws.Cells(i, 13).Value
+                         Greatest_ticker = ws.Cells(i, 10).Value
+                         
+                                                                        
+                       
+                         For j = i + 1 To LastRow
+                        If Greatest_Volume > ws.Cells(j, 13).Value Then
+                        ws.Cells(4, 16).Value = Greatest_ticker
+                        
+                        ws.Cells(4, 17).Value = Greatest_Volume
+                        
+                                If j = LastRow Then
+                                i = LastRow
+                                Exit For
+                                End If
+                            
+                            Else
+                            Exit For
+                       End If
+                            Next j
+           
+            End If
+            
+            
+            
+ Next i
+ 
+ Next ws
+                
+End Sub
+
